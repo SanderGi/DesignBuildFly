@@ -2,7 +2,7 @@
 
 [Node.js](https://nodejs.org/en/about/) is a popular runtime that lets you run JavaScript on the server. This project uses the [Fastify](https://www.fastify.io/) framework and basic templating with [Handlebars](https://handlebarsjs.com/).
 
-_Last updated: 10 July 2023_
+_Last updated: 14 August 2023_
 
 ## What's in this project?
 
