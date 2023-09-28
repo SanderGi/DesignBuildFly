@@ -1,6 +1,6 @@
-xcopy . DesignBuildFly /exclude:except.txt /y
-cd DesignBuildFly
+xcopy . ..\DesignBuildFly /e /y
+cd ..\DesignBuildFly
 git add .
 git commit -m "script upload"
 git push origin
-cd ..
+cd "AP 23-24"
