@@ -16,9 +16,12 @@
     Make sure the file name contains only alphanumeric characters.
   </p>
   <div id="file-drop" style="width: 80%">
-    <label><i class="fa fa-image"></i><input id="file-upload" type="file" accept="image/*" style="display: none;"></label>
+    <label><i class="fa fa-image"></i><input id="file-upload" name="uploadFile" type="file" accept="*" style="display: none;"></label>
   </div>
   <br>
+  <p id="file-preview">
+    No file uploaded yet.
+  </p>
   <button class="button">To CSV!</button>
 </main>
 <footer>
@@ -27,8 +30,11 @@ Alex is awesome
 
 <script>
 
+let uploadFile;
+
 function handleUploadedFile(file) {
-    console.log(file)
+  uploadFile = file;
+  document.getElementById('file-preview').textCon
 }
 
 const fileUploader = document.getElementById('file-upload');
@@ -38,28 +44,28 @@ fileUploader.addEventListener('input', e => {
 
 const fileDrop = document.getElementById('file-drop');
 fileDrop.addEventListener('drop', (ev) => {
-    // Prevent default behavior (Prevent file from being opened)
-    ev.preventDefault();
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
   
-    if (ev.dataTransfer.items) {
-        // Use DataTransferItemList interface to access the file(s)
-        [...ev.dataTransfer.items].forEach((item, i) => {
-            // If dropped items aren't files, reject them
-            if (item.kind === "file") {
-                const file = item.getAsFile();
-                handleUploadedFile(file);
-            }
-        });
-    } else {
-        // Use DataTransfer interface to access the file(s)
-        [...ev.dataTransfer.files].forEach((file, i) => {
-            handleUploadedFile(file);
-        });
-    }
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    [...ev.dataTransfer.items].forEach((item, i) => {
+      // If dropped items aren't files, reject them
+      if (item.kind === "file") {
+        const file = item.getAsFile();
+        handleUploadedFile(file);
+      }
+    });
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    [...ev.dataTransfer.files].forEach((file, i) => {
+      handleUploadedFile(file);
+    });
+  }
 });
 fileDrop.addEventListener('dragover', (ev) => {
-    // Prevent default behavior (Prevent file from being opened)
-    ev.preventDefault();
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
 }); 
   
 </script>
