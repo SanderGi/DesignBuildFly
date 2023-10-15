@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alex is awesome</title>
+  <
+</head>
+<body>
+
+<div id="image-drop">
+    <label><i class="fa fa-image"></i><input id="image-upload" type="file" accept="image/*" style="display: none;"></label>
+</div>
+
+<script>
+let uploadedDataURL;
+useUploadradio.addEventListener('input', e => {
+    if (useUploadradio.checked && uploadedDataURL)
+        preview.style.backgroundImage = 'url(' + uploadedDataURL + ')';
+});
+
+function handleUploadedDataURL(dataurl) {
+    uploadedDataURL = dataurl;
+    preview.style.backgroundImage = 'url(' + dataurl + ')';
+    useUploadradio.checked = true;
+}
+
+function handleUploadedFile(file) {
+    reduceFileSize(file, 4000, 128, Infinity, 0.5, blob => {
+        blobToDataURL(blob, handleUploadedDataURL);
+    });
+}
+
+const imageUploader = document.getElementById('image-upload');
+imageUploader.addEventListener('input', e => {
+    handleUploadedFile(imageUploader.files[0]);
+});
+
+const imageDrop = document.getElementById('image-drop');
+imageDrop.addEventListener('drop', (ev) => {
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
+  
+    if (ev.dataTransfer.items) {
+        // Use DataTransferItemList interface to access the file(s)
+        [...ev.dataTransfer.items].forEach((item, i) => {
+            // If dropped items aren't files, reject them
+            if (item.kind === "file") {
+                const file = item.getAsFile();
+                handleUploadedFile(file);
+            }
+        });
+    } else {
+        // Use DataTransfer interface to access the file(s)
+        [...ev.dataTransfer.files].forEach((file, i) => {
+            handleUploadedFile(file);
+        });
+    }
+});
+imageDrop.addEventListener('dragover', (ev) => {
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
+}); 
+  
+</script>
+  
+</body>
+</html>

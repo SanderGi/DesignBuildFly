@@ -1,25 +1,365 @@
-/* a minimalist set of CSS resets */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); /* Font-Awesome Icons */
 
-/* default to border-box */
-html {
-  box-sizing: border-box;
-  font-size: 16px;
+:root {
+    --background: midnightblue;
+    --primary: rgb(17, 17, 67);
+    --shadow: navy;
+    --accent: #5468ff;
+    --itemsize: 80px;
+    --default: blueviolet;
 }
 
-*, *:before, *:after {
-  box-sizing: inherit;
+* {
+    box-sizing: border-box;
 }
 
-/* adjust typography defaults */
+/* ===================== PAGE LAYOUT ===================== */
+body, html {
+    padding: 0%;
+    margin: 0%;
+}
+
 body {
-  margin: 1rem;
-  font-family: sans-serif;
-  line-height: 1.5;
+    background-color: var(--background);
+    font-family: droid sans mono, consolas, monospace;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
 }
 
-/* images and videos max out at full width */
-img,
-video {
-  height: auto;
-  max-width: 100%;
+header {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary);
+    position: relative;
+    box-shadow: 0px 2px 25px 0px var(--shadow);
+    padding: 6px;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+header * {
+    display: inline;
+    vertical-align: middle;
+}
+
+header > div:last-child {
+    flex-grow: 2;
+}
+
+header > div:last-child > button {
+    float: right;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+footer {
+    background-color: var(--primary);
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 1px;
+    box-shadow: 0px -2px 25px 0px var(--shadow);
+}
+
+.tierlist, .itemlist {
+    color: white;
+    background-color: var(--primary);
+    padding: 24px;
+    border-radius: 10px;
+    width: 80%;
+    margin: 20px;
+    text-align: center;
+    min-height: var(--itemsize);
+}
+
+@media only screen and (max-width: 800px) {
+    .tierlist, .itemlist {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        border-radius: 0;
+    }
+}
+
+/* ===================== TIERS AND ITEMS ===================== */
+.value, .item, .item-preview {
+    background-color: var(--default);
+    height: var(--itemsize);
+    min-width: var(--itemsize);
+    width: fit-content;
+    margin-right: 4px;
+}
+
+.tier {
+    background-color: rgba(255, 255, 255, 0.05);
+    min-height: var(--itemsize);
+    width: 100%;
+    margin: 2px;
+    display: flex;
+}
+
+.value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    position: relative;
+    padding: 6px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+.value > * {
+    mix-blend-mode: difference;
+}
+
+.value > p {
+    min-width: 10px;
+    width: fit-content;
+}
+
+.value input[type="color"] {
+    opacity: 0;
+    position: absolute;
+    right: 0; bottom: 0;
+}
+
+.value > label {
+    position: absolute;
+    right: 2px; bottom: 0;
+    font-size: x-large;
+}
+
+#items {
+    width: fit-content;
+    height: 100%;
+    margin: 0;
+}
+
+#items > .item {
+    margin-bottom: 6px;
+}
+
+.item, .item-preview  {
+    float: left;
+    position: relative;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.item > .label, .item-preview > .label {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    background-color: rgba(45, 35, 66, .6);
+    font-weight: 100;
+    padding-top: 1px;
+    text-align: center;
+
+    /* Allow two lines and show ellipsis when content goes beyond these two lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-box;
+    display: box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    line-height: 1em;        /* fallback */
+    max-height: 2em;       /* fallback */
+}
+
+.item > button {
+    position: absolute;
+    top: 0; right: 0;
+}
+
+#preview {
+    margin-right: 6px;
+}
+
+dialog {
+    background-color: var(--background);
+    color: white;
+    width: max-content;
+}
+
+dialog::backdrop {
+    backdrop-filter: blur(1px);
+}
+
+#add-item > button {
+    margin: auto;
+    left: 0; right: 0;
+    display: block;
+    text-align: center;
+}
+
+#add-item input[type="url"] {
+    width: 130px;
+}
+
+#add-item input[type="text"], #add-item input[type="url"] {
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid var(--accent);
+    color: white;
+    margin-bottom: 8px;
+}
+
+#suggestions {
+    min-height: var(--itemsize); 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center;
+}
+
+#suggestions > label {
+    background-color: var(--default); 
+    margin-right: 6px; margin-bottom: 6px; 
+    width: var(--itemsize); height: var(--itemsize);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#suggestions > label:has(input[type="radio"]:checked) {
+    border: 3px solid var(--accent);
+}
+
+#suggestions > label > input {
+    display: none;
+}
+
+/* ===================== DRAG AND DROP ===================== */
+.tier > .dropzone {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -2px;
+    margin-bottom: -2px;
+    z-index: 2;
+}
+
+.tier > .dropzone > * {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.dropzone.over {
+    outline: 3px dotted var(--accent);
+}
+
+[draggable] {
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: move;
+}
+
+#image-drop {
+    border: 3px dotted var(--accent);
+    padding: 24px;
+    margin-top: 16px;
+}
+
+#image-drop > label {
+    position: relative;
+    display: block;
+    margin: auto;
+    left: 0; right: 0;
+    width: fit-content;
+    font-size: 3em;
+}
+
+/* ===================== UI COMPONENTS ===================== */
+a {
+    color: white;
+}
+
+.addwrapper {
+    float: left;
+    width: var(--itemsize);
+    height: var(--itemsize);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add {
+    background-color: aquamarine;
+    width: 40px; height: 40px;
+    margin: auto;
+    left: 0; right: 0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--accent);
+    font-size: 1.5rem;
+    border: none;
+    padding: 0px;
+}
+
+.add:hover:not(:active) {
+    transform: translateY(-2px);
+}
+
+.add:active {
+    transform: translateY(2px);
+}
+
+/* Fancy button with background gradient and animation */
+.button {
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    border: 0;
+    border-radius: 6px;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s, transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow,transform;
+    margin: 5px;
+    min-width: 15ch;
+    font-size: 0.8rem;
+}
+
+.button:hover:not(:active) {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+    transform: translateY(-2px);
+}
+
+.button:active {
+    transform: translateY(2px);
+}
+
+.button:any-link {
+    color: white;
+    -webkit-tap-highlight-color: transparent;
 }
