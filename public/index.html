@@ -3,10 +3,11 @@
 <head>
   <title>Alex is awesome</title>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" type="image/x-icon" href="https://sandergi.github.io/images/icons8-coding-64.png">
 </head>
 <body>
 <header>
- Alex is awesome  
+ Alex DBF Utils
 </header>
 <main>
   <h1>
@@ -79,7 +80,16 @@ document.getElementById('to-csv').addEventListener("click", async () => {
     body: data
   });
   const text = await res.text();
-  console.log(text);
+  const element = document.createElement('a');
+  element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', uploadFile.name.slice(0, -4) + ".csv");
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 });
   
 </script>
