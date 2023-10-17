@@ -24,12 +24,16 @@
     No file uploaded yet.
   </p>
   <button class="button" id="to-csv">To CSV!</button>
+  <p>
+    
+  </p>
 </main>
 <footer>
 By <a href="https://sandergi.github.io">Alex</a>
 </footer>
 
-<script>
+<script type="module">
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
 
 let uploadFile;
 
@@ -80,9 +84,19 @@ document.getElementById('to-csv').addEventListener("click", async () => {
     body: data
   });
   const text = await res.text();
+  download(text, uploadFile.name.slice(0, -4) + ".csv");
+  console.log("Parsing CSV...")
+  const csv = d3.csvParse(text);
+  for (const col of csv.columns) {
+    console.log(col)
+    console.log(d3.max(csv, (d) => { return parseFloat(d[col]); }));
+  }
+});
+  
+function download(csv_string, name) {
   const element = document.createElement('a');
-  element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', uploadFile.name.slice(0, -4) + ".csv");
+  element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+  element.setAttribute('download', name);
 
   element.style.display = 'none';
   document.body.appendChild(element);
@@ -90,7 +104,7 @@ document.getElementById('to-csv').addEventListener("click", async () => {
   element.click();
 
   document.body.removeChild(element);
-});
+}
   
 </script>
   
