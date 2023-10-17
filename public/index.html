@@ -24,9 +24,7 @@
     No file uploaded yet.
   </p>
   <button class="button" id="to-csv">To CSV!</button>
-  <p>
-    
-  </p>
+  <p id="stats"></p>
 </main>
 <footer>
 By <a href="https://sandergi.github.io">Alex</a>
@@ -85,11 +83,13 @@ document.getElementById('to-csv').addEventListener("click", async () => {
   });
   const text = await res.text();
   download(text, uploadFile.name.slice(0, -4) + ".csv");
-  console.log("Parsing CSV...")
+  const stats = document.getElementById("stats");
+  stats.textContent = "Parsing CSV...";
   const csv = d3.csvParse(text);
+  stats.innerHTML = "";
   for (const col of csv.columns) {
-    console.log(col)
-    console.log(d3.max(csv, (d) => { return parseFloat(d[col]); }));
+    stats.innerHTML += col + ": "
+    stats.innerHTML += "[" + d3.min(csv, (d) => { return parseFloat(d[col]); }) + ", "+ d3.max(csv, (d) => { return parseFloat(d[col]); }) + "]<br>";
   }
 });
   
