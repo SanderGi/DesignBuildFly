@@ -17,7 +17,7 @@ app.post("/upload", function (req, res) {
     // Logging uploading file 
     console.log(uploadedFile); 
     
-    exec('blackbox-tools/blackbox_decode ' + uploadedFile.tempFilePath, (error, stdout, stderr) => {
+    exec('python3 -m python_tools.scripts.decode_blackbox ' + uploadedFile.tempFilePath + ' ' + uploadedFile.tempFilePath + ".csv", (error, stdout, stderr) => {
       console.log('stdout: ' + stdout);
       console.log('stderr: ' + stderr);
       if (error !== null) {
@@ -26,7 +26,7 @@ app.post("/upload", function (req, res) {
         return;
       }
       
-      res.download(uploadedFile.tempFilePath + ".01.csv", function (err) { 
+      res.download(uploadedFile.tempFilePath + ".csv", function (err) { 
         if (err) { 
           console.log(err); 
         } 

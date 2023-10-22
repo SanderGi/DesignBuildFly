@@ -2,13 +2,11 @@ import pandas as pd
 
 import sys
 import os
-from pathlib import Path
 
-sys.path.append(str(Path(os.path.abspath("")).parent.parent))
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+from python_tools.util.blackbox import decode_blackbox
 
-from DesignBuildFly.util.blackbox import decode_blackbox
-
-USAGE = "Usage: `python parse_data.py <log_path> <wind_tunnel_csv>:<test_point> [output_path]`"
+USAGE = "Usage: `python parse_windtunnel_data.py <log_path> <wind_tunnel_csv>:<test_point> [output_path]`"
 HELP_MESSAGE = f"""
     This script combines the blackbox data with the wind tunnel data. It crops out the incompatible data.
 
@@ -29,7 +27,7 @@ def main(args):
         print(HELP_MESSAGE)
         return
     assert (
-        len(args) < 5
+        len(args) <= 4
     ), f"Use quotes around file paths with spaces. Try `python parse_data.py --help`. {USAGE}"
     log_path = args[1]
     wind_tunnel_path = args[2].split(":")[0]
