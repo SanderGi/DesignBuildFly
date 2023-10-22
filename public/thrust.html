@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Alex DBF Utils</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" type="image/x-icon" href="https://sandergi.github.io/images/icons8-coding-64.png">
+</head>
+<body>
+<header>
+  Alex DBF Utils
+  <a href="blackbox.html" class="button">Blackbox Flight Log to CSV</a>
+</header>
+<main>
+  <h1>
+    Upload zipped .txt thrust data to convert to csv!
+  </h1>
+  <p>
+    Text files must follow this naming convention: <code>&lt;motor&gt;_&lt;prop&gt;_&lt;battery&gt;_&lt;run_name&gt;.txt</code>
+  </p>
+  <div id="file-drop" style="width: 80%">
+    <label><i class="fa fa-image"></i><input id="file-upload" name="uploadFile" accept=".zip" type="file" style="display: none;"></label>
+  </div>
+  <br>
+  <p id="file-preview">
+    No file uploaded yet.
+  </p>
+  <button class="button" id="to-csv">To CSV!</button>
+</main>
+<footer>
+By <a href="https://sandergi.github.io">Alex</a>
+</footer>
+
+<script type="module">
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm"
+
+let uploadFile;
+
+function handleUploadedFile(file) {
+  uploadFile = file;
+  document.getElementById('file-preview').textContent = "Uploaded " + file.name + " (" + file.size + " Bytes)";
+}
+
+const fileUploader = document.getElementById('file-upload');
+fileUploader.addEventListener('input', e => {
+    handleUploadedFile(fileUploader.files[0]);
+});
+
+const fileDrop = document.getElementById('file-drop');
+fileDrop.addEventListener('drop', (ev) => {
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+  
+  if (ev.dataTransfer.items) {
+    // Use DataTransferItemList interface to access the file(s)
+    [...ev.dataTransfer.items].forEach((item, i) => {
+      // If dropped items aren't files, reject them
+      if (item.kind === "file") {
+        const file = item.getAsFile();
+        handleUploadedFile(file);
+      }
+    });
+  } else {
+    // Use DataTransfer interface to access the file(s)
+    [...ev.dataTransfer.files].forEach((file, i) => {
+      handleUploadedFile(file);
+    });
+  }
+});
+fileDrop.addEventListener('dragover', (ev) => {
+  // Prevent default behavior (Prevent file from being opened)
+  ev.preventDefault();
+});
+  
+document.getElementById('to-csv').addEventListener("click", async () => {
+  if (!uploadFile) return;
+  
+  const data = new FormData()
+  data.append('uploadFile', uploadFile)
+
+  const res = await fetch('/decode_thrust', {
+    method: 'POST',
+    body: data
+  });
+  const bytes = await res.blob();
+  download(bytes, uploadFile.name.slice(0, -4) + "_csvs.zip");
+});
+  
+function download(bytes, name) {
+  const element = document.createElement('a');
+  element.setAttribute('href', URL.createObjectURL(bytes));
+  element.setAttribute('download', name);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+  
+</script>
+  
+</body>
+</html>
