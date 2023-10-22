@@ -22,7 +22,7 @@ def main(args: list[str]):
         return
     assert (
         len(args) <= 3
-    ), f"Use quotes around file paths with spaces. Try `python parse_data.py --help`. {USAGE}"
+    ), f"Use quotes around file paths with spaces. Try `python decode_blackbox.py --help`. {USAGE}"
     log_path = args[1]
     output_path = args[2] if len(args) > 2 else log_path[:-4] + ".csv"
     df = decode_blackbox(log_path)
