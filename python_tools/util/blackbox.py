@@ -19,21 +19,21 @@ def decode_blackbox(log_path: str):
                 os.system(
                     '../libs/blackbox-tools-6.0.0_win64/blackbox_decode.exe "'
                     + log_path
-                    + '" --stdout > '
+                    + '" --stdout --datetime > '
                     + tempf.name,
                 )
             elif operating_system == "Darwin":  # Mac
                 os.system(
                     '../libs/blackbox-tools-6.0.0_macos/blackbox_decode "'
                     + log_path
-                    + '" --stdout > '
+                    + '" --stdout --datetime > '
                     + tempf.name,
                 )
             elif operating_system == "Linux":
                 os.system(
                     '../libs/blackbox-tools-6.0.0_linux/blackbox_decode "'
                     + log_path
-                    + '" --stdout > '
+                    + '" --stdout --datetime > '
                     + tempf.name,
                 )
             else:

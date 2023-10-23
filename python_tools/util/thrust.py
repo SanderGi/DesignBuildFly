@@ -6,11 +6,20 @@ def decode_thrust(zip_path: str):
     run_dfs: dict[str, pd.DataFrame] = dict()
     with zipfile.ZipFile(zip_path, "r") as zip_ref:
         for run in zip_ref.namelist():
+            if run.endswith(".stc") or run.endswith("Notes.txt"):
+                continue
+            default_run_name = "default"
             run_config_parts = run.split("_")
+            if "/" in run:
+                parts = run.split("/")
+                default_run_name = parts[0]
+                run_config_parts = parts[-1].split("_")
             motor = run_config_parts[0]
             prop = run_config_parts[1]
             battery = run_config_parts[2]
-            run_name = run_config_parts[3]
+            run_name = (
+                run_config_parts[3] if len(run_config_parts) > 3 else default_run_name
+            )
             if run_name not in run_dfs:
                 run_dfs[run_name] = pd.DataFrame(
                     columns=["motor", "prop", "battery", "avg_max_thrust (g)"]
