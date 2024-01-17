@@ -6,7 +6,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
 from python_tools.util.blackbox import decode_blackbox
 
-USAGE = "Usage: `python parse_windtunnel_data.py <log_path> <wind_tunnel_csv>:<test_point> [output_path]`"
+USAGE = "Usage: `python parse_windtunnel_testpoint.py <log_path> <wind_tunnel_csv>:<test_point> [output_path]`"
 HELP_MESSAGE = f"""
     This script combines the blackbox data with the wind tunnel data. It crops out the incompatible data.
 

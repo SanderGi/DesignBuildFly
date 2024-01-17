@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Alex DBF Utils</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://sandergi.github.io/images/icons8-coding-64.png"
+    />
+  </head>
+  <body>
+    <header>
+      Alex DBF Utils
+      <a href="thrust.html" class="button">Thrust to CSV</a>
+      <a href="blackbox.html" class="button">Blackbox Flight Log to CSV</a>
+    </header>
+    <main>
+      <h1>Percent Throttle CSVS from Blackbox and Wind Tunnel Data</h1>
+      <p>
+        Upload zipped wind tunnel data and blackbox data to combine into percent
+        throttle csvs! Test points are matched based on auto-calculated throttle
+        steps in the blackbox data. File names must have the same format as
+        `at5220_15x14x3_40ms_8s_2.4ah_run1.[TXT|csv]` and match exactly (case
+        insensitive) between the two zips.
+      </p>
+      <h2>Upload a zipfile with .txt flight log data</h2>
+      <div id="blackbox-drop" class="file-drop" style="width: 80%">
+        <label
+          ><i class="fa fa-image"></i
+          ><input
+            id="blackbox-upload"
+            class="file-upload"
+            name="uploadFile"
+            accept=".zip"
+            type="file"
+            style="display: none"
+        /></label>
+      </div>
+      <br />
+      <p id="blackbox-preview">No file uploaded yet.</p>
+      <h2>Upload a zipfile with .csv windtunnel data</h2>
+      <div id="windtunnel-drop" class="file-drop" style="width: 80%">
+        <label
+          ><i class="fa fa-image"></i
+          ><input
+            id="windtunnel-upload"
+            class="file-upload"
+            name="uploadFile"
+            accept=".zip"
+            type="file"
+            style="display: none"
+        /></label>
+      </div>
+      <br />
+      <p id="windtunnel-preview">No file uploaded yet.</p>
+      <button class="button" id="to-csv">To CSVs!</button>
+    </main>
+    <footer>By <a href="https://sandergi.github.io">Alex</a></footer>
+
+    <script type="module">
+      let blackboxUploadFile;
+      let windtunnelUploadFile;
+
+      function handleUploadedFile(file, preview) {
+        preview.textContent =
+          "Uploaded " + file.name + " (" + file.size + " Bytes)";
+      }
+
+      const blackboxUploader = document.getElementById("blackbox-upload");
+      blackboxUploader.addEventListener("input", (e) => {
+        blackboxUploadFile = file;
+        handleUploadedFile(
+          blackboxUploader.files[0],
+          document.getElementById("blackbox-preview")
+        );
+      });
+      const windtunnelUploader = document.getElementById("windtunnel-upload");
+      windtunnelUploader.addEventListener("input", (e) => {
+        windtunnelUploadFile = file;
+        handleUploadedFile(
+          windtunnelUploader.files[0],
+          document.getElementById("windtunnel-preview")
+        );
+      });
+
+      const blackboxDrop = document.getElementById("blackbox-drop");
+      blackboxDrop.addEventListener("drop", (ev) => {
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+          // Use DataTransferItemList interface to access the file(s)
+          [...ev.dataTransfer.items].forEach((item, i) => {
+            // If dropped items aren't files, reject them
+            if (item.kind === "file") {
+              const file = item.getAsFile();
+              blackboxUploadFile = file;
+              handleUploadedFile(
+                file,
+                document.getElementById("blackbox-preview")
+              );
+            }
+          });
+        } else {
+          // Use DataTransfer interface to access the file(s)
+          [...ev.dataTransfer.files].forEach((file, i) => {
+            blackboxUploadFile = file;
+            handleUploadedFile(
+              file,
+              document.getElementById("blackbox-preview")
+            );
+          });
+        }
+      });
+      blackboxDrop.addEventListener("dragover", (ev) => {
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+      });
+      const windtunnelDrop = document.getElementById("windtunnel-drop");
+      windtunnelDrop.addEventListener("drop", (ev) => {
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+
+        if (ev.dataTransfer.items) {
+          // Use DataTransferItemList interface to access the file(s)
+          [...ev.dataTransfer.items].forEach((item, i) => {
+            // If dropped items aren't files, reject them
+            if (item.kind === "file") {
+              const file = item.getAsFile();
+              windtunnelUploadFile = file;
+              handleUploadedFile(
+                file,
+                document.getElementById("windtunnel-preview")
+              );
+            }
+          });
+        } else {
+          // Use DataTransfer interface to access the file(s)
+          [...ev.dataTransfer.files].forEach((file, i) => {
+            windtunnelUploadFile = file;
+            handleUploadedFile(
+              file,
+              document.getElementById("windtunnel-preview")
+            );
+          });
+        }
+      });
+      windtunnelDrop.addEventListener("dragover", (ev) => {
+        // Prevent default behavior (Prevent file from being opened)
+        ev.preventDefault();
+      });
+
+      document.getElementById("to-csv").addEventListener("click", async () => {
+        if (!blackboxUploadFile) return;
+        if (!windtunnelUploadFile) return;
+
+        const data = new FormData();
+        data.append("blackboxZip", blackboxUploadFile);
+        data.append("windtunnelZip", windtunnelUploadFile);
+
+        const res = await fetch("/parse_windtunnel", {
+          method: "POST",
+          body: data,
+        });
+        const blob = await res.blob();
+        download(blob, "processed.zip");
+      });
+
+      function download(blob, name) {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = function () {
+          const base64data = reader.result;
+          console.log(base64data);
+          const element = document.createElement("a");
+          element.setAttribute("href", base64data);
+          element.setAttribute("download", name);
+
+          element.style.display = "none";
+          document.body.appendChild(element);
+
+          element.click();
+
+          document.body.removeChild(element);
+        };
+      }
+    </script>
+  </body>
+</html>

@@ -108,13 +108,13 @@ dialog::backdrop {
     cursor: move;
 }
 
-#file-drop {
+#file-drop, .file-drop {
     border: 3px dotted var(--accent);
     padding: 24px;
     margin-top: 16px;
 }
 
-#file-drop > label {
+#file-drop > label, .file-drop > label {
     position: relative;
     display: block;
     margin: auto;
