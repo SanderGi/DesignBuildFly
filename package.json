@@ -1,5 +1,5 @@
 {
-  "name": "glitch-mvp-node",
+  "name": "Alex DBF Utils",
   "version": "0.1.0",
   "description": "Alex DBF Utils for common data analytics tasks at UW Design Build Fly",
   "main": "server.js",
@@ -26,5 +26,6 @@
   "devDependencies": {
     "dotenv": "^16.3.1",
     "nodemon": "^3.0.1"
-  }
+  },
+  "private": true
 }
